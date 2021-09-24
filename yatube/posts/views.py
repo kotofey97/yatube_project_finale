@@ -64,16 +64,13 @@ def post_detail(request, post_id):
 
 @login_required
 def post_create(request):
-    if request.method == 'POST':
-        form = PostForm(request.POST)
-        if form.is_valid():
-            post = form.save(commit=False)
-            post.author = request.user
-            post.published_date = timezone.now()
-            post.save()
-            return redirect('posts:profile', username=post.author)
-    else:
-        form = PostForm()
+    form = PostForm(request.POST or None, files=request.FILES or None)
+    if form.is_valid():
+        post = form.save(commit=False)
+        post.author = request.user
+        post.published_date = timezone.now()
+        post.save()
+        return redirect('posts:profile', username=post.author)
     context = {
         'form': form
     }
@@ -84,17 +81,18 @@ def post_edit(request, post_id):
     post = get_object_or_404(Post, pk=post_id)
     if request.user != post.author:
         return redirect('posts:post_detail', post_id=post_id)
-    if request.method == "POST":
-        form = PostForm(request.POST, instance=post)
-        if form.is_valid():
-            post = form.save(commit=False)
-            post.author = request.user
-            post.published_date = timezone.now()
-            post.save()
-            return redirect('posts:post_detail', post_id=post_id)
-    else:
-        form = PostForm(instance=post)
+    form = PostForm(
+        request.POST or None,
+        files=request.FILES or None,
+        instance=post)
+    if form.is_valid():
+        # post = form.save(commit=False)
+        # post.author = request.user
+        # post.published_date = timezone.now()
+        form.save()
+        return redirect('posts:post_detail', post_id=post_id)
     context = {
+        'post': post,
         'form': form,
         'is_edit': True,
     }

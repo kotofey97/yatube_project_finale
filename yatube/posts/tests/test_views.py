@@ -1,10 +1,15 @@
-from django import forms
-from django.test import Client, TestCase
-from django.urls import reverse
+import shutil
+import tempfile
 
+from django import forms
+from django.conf import settings
+from django.core.files.uploadedfile import SimpleUploadedFile
+from django.test import Client, TestCase, override_settings
+from django.urls import reverse
 from posts.models import Group, Post, User
 
-
+TEMP_MEDIA_ROOT = tempfile.mkdtemp(dir=settings.BASE_DIR)
+@override_settings(MEDIA_ROOT=TEMP_MEDIA_ROOT)
 class TaskPagesTests(TestCase):
     @classmethod
     def setUpClass(cls):
@@ -15,10 +20,24 @@ class TaskPagesTests(TestCase):
             slug='test-slug',
             description='Тестовое описание',
         )
+        small_gif = (            
+             b'\x47\x49\x46\x38\x39\x61\x02\x00'
+             b'\x01\x00\x80\x00\x00\x00\x00\x00'
+             b'\xFF\xFF\xFF\x21\xF9\x04\x00\x00'
+             b'\x00\x00\x00\x2C\x00\x00\x00\x00'
+             b'\x02\x00\x01\x00\x00\x02\x02\x0C'
+             b'\x0A\x00\x3B'
+        )
+        cls.uploaded = SimpleUploadedFile(
+            name='small.gif',
+            content=small_gif,
+            content_type='image/gif'
+        )
         cls.post = Post.objects.create(
             author=cls.user,
             text='Тестовый текст поста',
-            group=cls.group
+            group=cls.group,
+            image=cls.uploaded,
         )
         cls.user2 = User.objects.create_user(username='TestUser2')
         cls.group2 = Group.objects.create(
@@ -26,6 +45,11 @@ class TaskPagesTests(TestCase):
             slug='test-slug2',
             description='Тестовое описание2',
         )
+
+    @classmethod
+    def tearDownClass(cls):
+        super().tearDownClass()
+        shutil.rmtree(TEMP_MEDIA_ROOT, ignore_errors=True)
 
     def setUp(self):
         self.guest_client = Client()
@@ -71,11 +95,13 @@ class TaskPagesTests(TestCase):
                 post_id_0 = first_object.pk
                 post_text_0 = first_object.text
                 post_group_0 = first_object.group.slug
+                post_image_0 = first_object.image
                 # print(response.context.get('page_obj').object_list)
                 self.assertEqual(post_author_0, self.post.author)
                 self.assertEqual(post_id_0, self.post.pk)
                 self.assertEqual(post_text_0, self.post.text)
                 self.assertEqual(post_group_0, self.group.slug)
+                self.assertEqual(post_image_0, self.post.image)
 
     def test_post_detail_pages_show_correct_context(self):
         """Шаблон post_detail сформирован с правильным контекстом."""
@@ -86,10 +112,12 @@ class TaskPagesTests(TestCase):
         post_id_0 = first_object.pk
         post_text_0 = first_object.text
         post_group_0 = first_object.group.slug
+        post_image_0 = first_object.image
         self.assertEqual(post_author_0, self.post.author)
         self.assertEqual(post_id_0, self.post.pk)
         self.assertEqual(post_text_0, self.post.text)
         self.assertEqual(post_group_0, self.group.slug)
+        self.assertEqual(post_image_0, self.post.image)
 
     def test_post_create_or_edit_correct_context(self):
         """Шаблоны создания и редактирования поста
