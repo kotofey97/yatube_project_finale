@@ -1,5 +1,4 @@
 from django.test import Client, TestCase
-
 from posts.models import Group, Post, User
 
 

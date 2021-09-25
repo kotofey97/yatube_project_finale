@@ -1,37 +1,13 @@
 {% extends 'base.html' %}
 {% block title %} Профайл пользователя {{author.get_full_name}} {% endblock %}
-{% load thumbnail %}
 
 {% block content %}     
   <h1>Все посты пользователя {{ author.get_full_name }} </h1>
-  <h3>Всего постов: {{num_posts}} </h3> 
+  <h3>Всего постов: {{page_obj.paginator.count}} </h3> 
   {% for post in page_obj %}  
-    <article>
-       <ul>
-        <li>
-          Автор: {{ author.get_full_name }}
-          <a href="{% url 'posts:profile' username=post.author.username %}">все посты пользователя</a>
-        </li>
-        <li>
-          Дата публикации: {{ post.pub_date|date:"d E Y" }} 
-        </li>
-      </ul>
-        {% thumbnail post.image "960x339" crop="center" upscale=True as im %}
-          <img class="card-img my-2" src="{{ im.url }}">
-        {% endthumbnail %}
-      <p>
-        {{post.text}}
-      </p>
-      <a href="{% url 'posts:post_detail' post_id=post.pk %}">подробная информация </a>
-    </article> 
-    {%if post.group%}      
-    <a href="{% url 'posts:group_posts' slug=post.group.slug %}">все записи группы</a>   
-    {% endif %}      
-    <hr>
-
+    {% include 'posts/includes/post_item.html'%}
+    {% if not forloop.last %}<hr>{% endif %}
   {% endfor %} 
-  <!-- Остальные посты. после последнего нет черты -->
-  <!-- Здесь подключён паджинатор --> 
   {% include 'posts/includes/paginator.html' %}
 {% endblock %} 
 

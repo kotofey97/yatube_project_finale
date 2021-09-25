@@ -33,11 +33,11 @@ class Post(models.Model):
         upload_to='posts/',
         blank=True
     )
+
     class Meta:
         ordering = ['-pub_date']
         verbose_name = 'Пост'
         verbose_name_plural = 'Посты'
-        
 
     def __str__(self):
         return self.text[:15]
@@ -76,5 +76,6 @@ class Comment(models.Model):
         verbose_name='Дата комментария',
         auto_now_add=True
     )
+
     def __str__(self):
         return self.text[:15]
