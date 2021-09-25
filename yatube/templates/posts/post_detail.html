@@ -40,6 +40,12 @@
           <p>
            {{post.text}} 
           </p>
+          {% if user.username == author.username%}
+            <a class="btn btn-primary" href="{% url 'posts:post_edit' post_id=post.id %}">
+              редактировать запись
+            </a>
+          {% endif %} 
+          {% include 'posts/comment.html'%}
         </article>
       </div> 
     </main>

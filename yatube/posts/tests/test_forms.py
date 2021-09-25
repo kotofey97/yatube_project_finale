@@ -6,7 +6,7 @@ from django.core.files.uploadedfile import SimpleUploadedFile
 from django.test import Client, TestCase, override_settings
 from django.urls import reverse
 from posts.forms import PostForm
-from posts.models import Group, Post, User
+from posts.models import Comment, Group, Post, User
 
 TEMP_MEDIA_ROOT = tempfile.mkdtemp(dir=settings.BASE_DIR)
 @override_settings(MEDIA_ROOT=TEMP_MEDIA_ROOT)
@@ -86,3 +86,19 @@ class PostFormTests(TestCase):
         self.assertEqual(Post.objects.count(), posts_count)
         self.assertRedirects(response, reverse('posts:post_detail', kwargs={'post_id': test_post.pk}))
         self.assertTrue(Post.objects.filter(text='Редактированный пост', group__slug='test-slug').exists())
+
+    def test_comment(self):
+        """Авторизованный может комментировать"""
+        comment_count = Comment.objects.count()
+        post_id = self.post.pk
+        form_data = {
+            'text': 'Новый коммент',
+        }
+        response = self.author_client.post(
+            reverse('posts:add_comment', kwargs={'post_id': post_id}),
+            data=form_data,
+            follow=True
+        )
+        self.assertEqual(Comment.objects.count(), comment_count + 1)
+        self.assertTrue(Comment.objects.filter(text='Новый коммент').exists())
+        self.assertRedirects(response, reverse('posts:post_detail', kwargs={'post_id': post_id}))
