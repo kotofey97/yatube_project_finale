@@ -5,7 +5,7 @@ from django.utils import timezone
 from django.views.decorators.cache import cache_page
 
 from .forms import CommentForm, PostForm
-from .models import Group, Post, User
+from .models import Follow, Group, Post, User
 
 PER_PAGE = 10
 
@@ -43,9 +43,12 @@ def profile(request, username):
     paginator = Paginator(post_list, PER_PAGE)
     page_number = request.GET.get('page')
     page_obj = paginator.get_page(page_number)
+    following = Follow.objects.filter(user__username=request.user, 
+                                      author=author) 
     context = {
         'author': author,
         'page_obj': page_obj,
+        'following': following,
     }
     return render(request, 'posts/profile.html', context)
 
@@ -106,3 +109,30 @@ def add_comment(request, post_id):
         comment.post = post
         comment.save()
     return redirect('posts:post_detail', post_id=post_id)
+
+
+@login_required
+def follow_index(request):
+    post_list = Post.objects.filter(author__following__user=request.user)
+    paginator = Paginator(post_list, PER_PAGE)
+    page_number = request.GET.get('page')
+    page_obj = paginator.get_page(page_number)
+    context = {
+        'page_obj': page_obj,
+    }
+    return render(request, 'posts/follow.html', context)
+
+@login_required
+def profile_follow(request, username):
+    user = get_object_or_404(User, username=username)
+    Follow.objects.get_or_create(user=request.user,author=user)
+    return redirect('posts:profile', username)
+
+@login_required
+def profile_unfollow(request, username):
+    user = get_object_or_404(User, username=username)
+    follow, created = Follow.objects.get_or_create(user=request.user,author=user)
+    follow.delete()
+    return redirect('posts:profile', username)
+
+

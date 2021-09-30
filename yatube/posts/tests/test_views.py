@@ -7,7 +7,7 @@ from django.core.cache import cache
 from django.core.files.uploadedfile import SimpleUploadedFile
 from django.test import Client, TestCase, override_settings
 from django.urls import reverse
-from posts.models import Group, Post, User
+from posts.models import Follow, Group, Post, User
 
 TEMP_MEDIA_ROOT = tempfile.mkdtemp(dir=settings.BASE_DIR)
 
@@ -180,3 +180,62 @@ class TaskPagesTests(TestCase):
         cache.clear()
         response_3 = self.authorized_client.get(page)
         self.assertEqual(response_0.content, response_3.content)
+
+
+    def test_follow_another_user(self): 
+        """Follow на другого пользователя работает корректно""" 
+        self.authorized_client.get(reverse('posts:profile_follow', 
+                                           kwargs={'username': self.user2.username})) 
+        follow_exist = Follow.objects.filter(user=self.user, 
+                                             author=self.user2).exists() 
+        self.assertTrue(follow_exist) 
+ 
+    def test_unfollow_another_user(self): 
+        """Unfollow от другого пользователя работает корректно""" 
+        self.authorized_client.get(reverse(
+            'posts:profile_follow', 
+            kwargs={'username': self.user2.username})) 
+        self.authorized_client.get(reverse(
+            'posts:profile_unfollow',
+            kwargs={'username': self.user2.username})) 
+        follow_exist = Follow.objects.filter(user=self.user, 
+                                             author=self.user2).exists() 
+        self.assertFalse(follow_exist)
+
+    def test_new_post_follow_index_show_correct_context(self): 
+        """Новая запись пользователя появляется в ленте тех,
+        кто на него подписан и не появляется в ленте тех, кто не подписан
+        """ 
+        self.authorized_client.get(reverse(
+            'posts:profile_follow',
+            kwargs={'username': self.user2.username}))
+        follow_exist = Follow.objects.filter(user=self.user,
+                                             author=self.user2).exists()
+        self.assertTrue(follow_exist)
+
+        post2 = Post.objects.create(
+            author=self.user2,
+            text='Тестовый текст поста',
+            group=self.group2
+        )
+        response = self.authorized_client.get(reverse('posts:follow_index'))
+        count0 = len(response.context.get('page_obj'))
+        first_object = response.context.get('page_obj').object_list[0]
+        post_author_0 = first_object.author
+        post_text_0 = first_object.text
+        post_group_0 = first_object.group.slug
+        self.assertEqual(post_author_0, post2.author)
+        self.assertEqual(post_text_0, post2.text)
+        self.assertEqual(post_group_0, self.group2.slug)
+
+        self.authorized_client.get(reverse(
+            'posts:profile_unfollow',
+            kwargs={'username': self.user2.username}))
+        follow_exist = Follow.objects.filter(user=self.user,
+                                             author=self.user2).exists()
+        self.assertFalse(follow_exist)
+        response = self.authorized_client.get(reverse('posts:follow_index'))
+        count1 = len(response.context.get('page_obj'))
+        self.assertEqual(count0-1, count1)
+
+    
