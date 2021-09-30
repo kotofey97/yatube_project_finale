@@ -72,6 +72,7 @@ class StaticURLTests(TestCase):
             '/posts/1/': 'posts/post_detail.html',
             '/posts/1/edit/': 'posts/create_post.html',
             '/create/': 'posts/create_post.html',
+            '/unexisting_page/': 'core/404.html',
         }
         for adress, template in templates_url_names.items():
             with self.subTest(adress=adress, template=template):

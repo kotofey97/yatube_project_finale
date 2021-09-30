@@ -3,6 +3,7 @@ import tempfile
 
 from django import forms
 from django.conf import settings
+from django.core.cache import cache
 from django.core.files.uploadedfile import SimpleUploadedFile
 from django.test import Client, TestCase, override_settings
 from django.urls import reverse
@@ -166,3 +167,16 @@ class TaskPagesTests(TestCase):
                 self.assertEqual(post_author_0, post2.author)
                 self.assertEqual(post_text_0, post2.text)
                 self.assertEqual(post_group_0, self.group2.slug)
+
+    def test_cache_index_page(self):
+        page = reverse('posts:index')
+        response_0 = self.authorized_client.get(page)
+        post = Post.objects.create(text="Test", author=self.user,
+                                   group=self.group)
+        response_1 = self.authorized_client.get(page)
+        Post.objects.filter(id=post.id).delete()
+        response_2 = self.authorized_client.get(page)
+        self.assertEqual(response_1.content, response_2.content)
+        cache.clear()
+        response_3 = self.authorized_client.get(page)
+        self.assertEqual(response_0.content, response_3.content)
