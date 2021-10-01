@@ -2,9 +2,30 @@
 {% extends "base.html" %}
 {% block title %}Об авторе проекта{% endblock %}
 {% block content %}
-<h1>Привет, я автор</h1>
-<p>
-  Тут я размещу информацию о себе используя свои умения верстать.
-  Картинки, блоки, элементы бустрап. А может быть, просто напишу несколько абзацев текста. 
-</p>
+<h1>Привет, я Оля, автор сайта</h1>
+<div class="row">
+  <div class="col-md-3 mb-3 mt-1"> 
+    <div class="card"> 
+      <div class="card-body">
+        {% load static %}
+          <img class="card-img" style="border-radius: 120px;" "720x720" crop="center" src="{% static "img/me.jpg" %}" width="260" hight="260" />
+      </div>                     
+    </div>                 
+  </div>
+        
+  <div class="col-md-9"> 
+    <div class="card-text">
+      <p>
+      Предложения по улучшениям можно отправить сюда:
+      <li class="list-group-item"> 
+        <div class="h6 text-muted">
+            <a class="p-2 text-dark" href="https://vk.com/id55868256">VK</a> 
+            <br>
+            <a class="p-2 text-dark" href="https://github.com/kotofey97">Github</a>
+        </div> 
+      </li>
+      </p>
+    </div>                                     
+  </div>
+</div>
 {% endblock %}

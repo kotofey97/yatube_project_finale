@@ -4,29 +4,36 @@
 {% block content %}
 {% comment %} Колонки с отступом сверху и снизу {% endcomment %}
 <div class="row">
-  <h1>Вот что я умею</h1>
+  <h1>Технологии</h1>
   {% comment %}
     Боковой блок со списком технологий 
     Займет всю ширину блока на мобильном
     и 25% при размерах экрана ≥768px
-  {% endcomment %}
-  <aside class="col-12 col-md-3">
-    <ul class="list-group list-group-flush">
-      <li class="list-group-item">
-        Python
-      </li>
-      <li class="list-group-item">
-        Django
-      </li>
-    </ul>
-  </aside>
+  {% endcomment %} 
+  
+  
   {% comment %}
     Статья  
     Займет всю ширину блока на мобильном
     и 75% при размерах экрана ≥768px
   {% endcomment %}
   <article class="col-12 col-md-9">
-    <p>Текст страницы "Технологии"</p>
+  <aside class="col-12 col-md-3">
+    <ul class="list-group list-group-flush">
+      <li class="list-group-item">
+        django 2.2 - фреймворк
+      </li>
+      <li class="list-group-item">
+        bootstrap - стили и оформление
+      </li>
+      <li class="list-group-item">
+        VS Code - среда разработки
+      </li>
+      <li class="list-group-item">
+        git - система контроля версий
+      </li>
+    </ul>
+  </aside>
   </article>
 </div>
 {% endblock %}
