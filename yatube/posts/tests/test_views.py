@@ -42,7 +42,7 @@ class TaskPagesTests(TestCase):
             group=cls.group,
             image=cls.uploaded,
         )
-        cls.user2 = User.objects.create_user(username='TestUser2')
+        cls.user2 = User.objects.create_user(username='TestttUser')
         cls.group2 = Group.objects.create(
             title='Тестовое название группы2',
             slug='test-slug2',
@@ -171,41 +171,19 @@ class TaskPagesTests(TestCase):
     def test_cache_index_page(self):
         page = reverse('posts:index')
         response_0 = self.authorized_client.get(page)
-        post = Post.objects.create(text="Test", author=self.user,
-                                   group=self.group)
+        post_0 = Post.objects.create(text="Test",
+                                     author=self.user,
+                                     group=self.group)
         response_1 = self.authorized_client.get(page)
-        Post.objects.filter(id=post.id).delete()
+        Post.objects.filter(pk=post_0.pk).delete()
         response_2 = self.authorized_client.get(page)
         self.assertEqual(response_1.content, response_2.content)
         cache.clear()
         response_3 = self.authorized_client.get(page)
         self.assertEqual(response_0.content, response_3.content)
 
-
-    def test_follow_another_user(self): 
-        """Follow на другого пользователя работает корректно""" 
-        self.authorized_client.get(reverse('posts:profile_follow', 
-                                           kwargs={'username': self.user2.username})) 
-        follow_exist = Follow.objects.filter(user=self.user, 
-                                             author=self.user2).exists() 
-        self.assertTrue(follow_exist) 
- 
-    def test_unfollow_another_user(self): 
-        """Unfollow от другого пользователя работает корректно""" 
-        self.authorized_client.get(reverse(
-            'posts:profile_follow', 
-            kwargs={'username': self.user2.username})) 
-        self.authorized_client.get(reverse(
-            'posts:profile_unfollow',
-            kwargs={'username': self.user2.username})) 
-        follow_exist = Follow.objects.filter(user=self.user, 
-                                             author=self.user2).exists() 
-        self.assertFalse(follow_exist)
-
-    def test_new_post_follow_index_show_correct_context(self): 
-        """Новая запись пользователя появляется в ленте тех,
-        кто на него подписан и не появляется в ленте тех, кто не подписан
-        """ 
+    def test_follow_another_user(self):
+        """Follow на другого пользователя работает корректно"""
         self.authorized_client.get(reverse(
             'posts:profile_follow',
             kwargs={'username': self.user2.username}))
@@ -213,6 +191,28 @@ class TaskPagesTests(TestCase):
                                              author=self.user2).exists()
         self.assertTrue(follow_exist)
 
+    def test_unfollow_another_user(self):
+        """Unfollow от другого пользователя работает корректно"""
+        self.authorized_client.get(reverse(
+            'posts:profile_follow',
+            kwargs={'username': self.user2.username}))
+        self.authorized_client.get(reverse(
+            'posts:profile_unfollow',
+            kwargs={'username': self.user2.username}))
+        follow_exist = Follow.objects.filter(user=self.user,
+                                             author=self.user2).exists()
+        self.assertFalse(follow_exist)
+
+    def test_new_post_follow_index_show_correct_context(self):
+        """Новая запись пользователя появляется в ленте тех,
+        кто на него подписан и не появляется в ленте тех, кто не подписан
+        """
+        self.authorized_client.get(reverse(
+            'posts:profile_follow',
+            kwargs={'username': self.user2.username}))
+        follow_exist = Follow.objects.filter(user=self.user,
+                                             author=self.user2).exists()
+        self.assertTrue(follow_exist)
         post2 = Post.objects.create(
             author=self.user2,
             text='Тестовый текст поста',
@@ -236,6 +236,4 @@ class TaskPagesTests(TestCase):
         self.assertFalse(follow_exist)
         response = self.authorized_client.get(reverse('posts:follow_index'))
         count1 = len(response.context.get('page_obj'))
-        self.assertEqual(count0-1, count1)
-
-    
+        self.assertEqual(count0 - 1, count1)

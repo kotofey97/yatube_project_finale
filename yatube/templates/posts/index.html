@@ -1,9 +1,11 @@
 {% extends 'base.html' %}
 {% block title %} Последние обновления на сайте {% endblock %}
 {% block content %}
-  {% include 'posts/includes/switcher.html' %}
+  
+ {% include 'posts/includes/switcher.html' %}
+
   {% load cache %}
-  {% cache 20 sidebar %}
+  {% cache 200 sidebar %}
     {% for post in page_obj %}
       {% include 'posts/includes/post_item.html'%}
       {% if not forloop.last %}<hr>{% endif %}
