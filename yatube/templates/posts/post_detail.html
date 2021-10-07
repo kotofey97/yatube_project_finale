@@ -4,14 +4,9 @@
 {% block content %}   
     <main>
       <div class="row">
-        {% include 'posts\includes\profile_item.html'%}
+        {% include 'posts/includes/profile_item.html'%}
         <article class="col-12 col-md-9">
           {% include 'posts/includes/post_item.html'%}
-          {% if user.username == post.author.username%}
-            <a class="btn btn-primary" href="{% url 'posts:post_edit' post_id=post.id %}">
-              редактировать запись
-            </a>
-          {% endif %} 
           {% include 'posts/comment.html'%}
         </article>
       </div> 

@@ -5,10 +5,9 @@
  {% include 'posts/includes/switcher.html' %}
 
   {% load cache %}
-  {% cache 200 sidebar %}
+  {% cache 2 sidebar %}
     {% for post in page_obj %}
       {% include 'posts/includes/post_item.html'%}
-      {% if not forloop.last %}<hr>{% endif %}
     {% endfor %}
   {% endcache %}
   {% include 'posts/includes/paginator.html' %}

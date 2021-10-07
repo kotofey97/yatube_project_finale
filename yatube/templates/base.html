@@ -7,10 +7,12 @@
     <!-- Сайт готов работать с мобильными устройствами -->
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <!-- Загружаем фав-иконки -->
+    {%comment%}
     <link rel="icon" href="img/fav/fav.ico" type="image">
     <link rel="apple-touch-icon" sizes="180x180" href="img/fav/apple-touch-icon.png">
     <link rel="icon" type="image/png" sizes="32x32" href="img/fav/favicon-32x32.png">
     <link rel="icon" type="image/png" sizes="16x16" href="img/fav/favicon-16x16.png">
+    {%endcomment%}
     <meta name="msapplication-TileColor" content="#da532c">
     <meta name="theme-color" content="#ffffff">
     <link rel="stylesheet" href="{% static 'css/bootstrap.min.css' %}">
@@ -26,11 +28,7 @@
           Контент не подвезли :(
         {% endblock %}
       </div> 
-    </main>
-    <!-- Использованы классы бустрапа: -->
-    <!-- border-top: создаёт тонкую линию сверху блока -->
-    <!-- text-center: выравнивает текстовые блоки внутри блока по центру -->
-    <!-- py-3: контент внутри размещается с отсупом сверху и снизу -->         
+    </main>        
     <footer class="border-top text-center py-3">
       {% include 'includes/footer.html' %}     
     </footer>

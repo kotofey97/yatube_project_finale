@@ -1,18 +1,21 @@
 
-<aside class="col-12 col-md-3">
-  <ul class="list-group">
-    <li class="list-group-item d-flex justify-content-between align-items-center">
-        <a href="{% url 'posts:profile' author %}"> {{ author.username }} </a>
-    </li>
-    <li class="list-group-item d-flex justify-content-between align-items-center">
-         {{ author.get_full_name }} 
-    </li>
-    <li class="list-group-item d-flex justify-content-between align-items-center">
-    <a href="{% url 'posts:profile' username=author.username %}"> Всего постов </a> 
-        <span class="badge bg-primary rounded-pill"> {{ author.posts.count }} </span>
-    </li>
-    <li class="list-group-item d-flex justify-content-between align-items-center">
-      {% include 'posts\includes\buttom_follow.html'%}
-    </li>
-    </ul>
-</aside>
+  <aside class="col-md-3 mb-3 mt-1">
+    <ul class="list-group">
+      <li class="list-group-item d-flex justify-content-between align-items-center">
+          <a href="{% url 'posts:profile' author %}"> {{ author.username }} </a>
+      </li>
+      <li class="list-group-item d-flex justify-content-between align-items-center">
+          {{ author.get_full_name }} 
+      </li>
+      <li class="list-group-item d-flex justify-content-between align-items-center">
+      <a href="{% url 'posts:profile' username=author.username %}"> Всего постов </a> 
+          <span class="badge bg-primary rounded-pill"> {{ author.posts.count }} </span>
+      </li>
+      {% if user != author %}
+        <li class="list-group-item d-flex justify-content-between align-items-center">
+          {% include 'posts/includes/buttom_follow.html'%}
+        </li>
+      {% endif %}
+      </ul>
+  </aside>
+

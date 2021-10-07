@@ -7,9 +7,9 @@
   <div class="container">
       <!-- ссылка на главную страницу -->
     <a class="navbar-brand" href="{% url 'posts:index' %}">
-      <img src="{% static 'img/logo.png' %}" width="30" height="30" class="d-inline-block align-top" alt="">
+      <img src="{% static 'img/logo.jpg' %}" width="30" height="30" class="d-inline-block align-top" alt="">
       <!-- тег span используется для добавления нужных стилей отдельным участкам текста -->
-      <span style="color:red">Ya</span>tube
+      HelloMemes
     </a>
     {% comment %}
       Меню - список пунктов со стандартными классами Bootsrap.
@@ -54,9 +54,14 @@
             Выйти
           </a>
         </li>
-        <li>
-          Пользователь: {{ user.username }}
-        <li>
+
+        <li class="nav-item"> 
+          <a class="nav-link link-danger {% if view_name  == 'posts:profile' %}active{% endif %}" 
+            href="{% url 'posts:profile' user.username %}"
+          >
+            {{ user.username }}
+          </a>
+        </li>
 
         {% else %}
 
@@ -82,4 +87,4 @@
 
   </div>
 </nav> 
-{% endwith %}      
+{% endwith %}     
