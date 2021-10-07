@@ -16,16 +16,20 @@
 Python 3.7
 Django 2.2.19
 ### Запуск проекта в dev-режиме
-- Склонируйте этот репозиторий в текущую папку `git clone https://github.com/kotofey97/yatube_project_finale.git`
+- Склонируйте этот репозиторий в текущую папку 
+    - `git clone https://github.com/kotofey97/yatube_project_finale.git`
 - Установите и активируйте виртуальное окружение 
     - `python -m venv venv`
     - `source venv/bin/activate`
-- Установите зависимости из файла requirements.txt `pip install -r requirements.txt`
+- Установите зависимости из файла requirements.txt 
+    - `pip install -r requirements.txt`
 - Выполните миграции 
     - `python manage.py makemigrations`
     - `python manage.py migrate`
-- Создайте суперпользователя Django (админа) `python manage.py createsuperuser --username admin --email 'admin@example.com'`
-- В папке с файлом manage.py выполните команду `python manage.py runserver`
+- Создайте суперпользователя Django (админа) 
+    - `python manage.py createsuperuser --username admin --email 'admin@example.com'`
+- В папке с файлом manage.py выполните команду 
+    - `python manage.py runserver`
 
 
 
