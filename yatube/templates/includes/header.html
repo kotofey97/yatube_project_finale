@@ -5,16 +5,11 @@
 
 <nav class="navbar navbar-light" style="background-color: lightskyblue">
   <div class="container">
-      <!-- ссылка на главную страницу -->
-    <a class="navbar-brand" href="{% url 'posts:index' %}">
+    <div class="navbar-brand" href="{% url 'posts:index' %}">
       <img src="{% static 'img/logo.jpg' %}" width="30" height="30" class="d-inline-block align-top" alt="">
-      <!-- тег span используется для добавления нужных стилей отдельным участкам текста -->
       HelloMemes
-    </a>
-    {% comment %}
-      Меню - список пунктов со стандартными классами Bootsrap.
-    Класс nav-pills нужен для выделения активных пунктов 
-    {% endcomment %}
+    </div>
+    
     <ul class="nav nav-pills">
         <li class="nav-item"> 
           <a class="nav-link {% if view_name  == 'about:author' %}active{% endif %}" 

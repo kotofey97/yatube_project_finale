@@ -5,7 +5,7 @@
     {% load static %}
     <meta charset="utf-8"> <!-- Кодировка сайта -->
     <!-- Сайт готов работать с мобильными устройствами -->
-    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     <!-- Загружаем фав-иконки -->
     {%comment%}
     <link rel="icon" href="img/fav/fav.ico" type="image">
@@ -19,18 +19,20 @@
     <title> {% block title%} {% endblock %}</title>
   </head>
   <body>
-    <header>
+ 
       {% include 'includes/header.html' %}     
-    </header>
     <main>
+
+ 
       <div class="container">
         {% block content %}
           Контент не подвезли :(
         {% endblock %}
-      </div> 
+      </div>  
     </main>        
     <footer class="border-top text-center py-3">
       {% include 'includes/footer.html' %}     
     </footer>
+ 
   </body>
 </html>

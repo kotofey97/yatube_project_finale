@@ -5,7 +5,7 @@
   
   <a href="{% url 'posts:post_detail' post.pk %}">
   {% load thumbnail %}
-  {% thumbnail post.image "1200x700" crop="center" upscale=True as im %}
+  {% thumbnail post.image "1200" crop="center" upscale=True as im %}
   <img class="card-img" src="{{ im.url }}" />
   {% endthumbnail %}
   </a>
@@ -35,8 +35,9 @@
 
     <div class="d-flex justify-content-between align-items-center">
       <div class="btn-group">
+        {% if not form %}
         <a class="btn btn-outline-primary btn-sm" href="{% url 'posts:post_detail' post.pk %}">Подробнее</a>
-        
+        {% endif %}
         {% if user == post.author and form %}
             <a class="btn btn-outline-primary btn-sm" href="{% url 'posts:post_edit' post.id %}" role="button">
               Редактировать
