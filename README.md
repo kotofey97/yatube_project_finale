@@ -39,4 +39,7 @@ Django 2.2.19
 - админка
 - тестирование
 
+### Автор
+- [Логинова Ольга](https://github.com/kotofey97) 
+
 #### Работающий проект находится по адресу: http://hellocowboy.pythonanywhere.com/
